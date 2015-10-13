@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: webserver-v1
+spec:
+  selector:
+    name: webserver
+    version: v1
+  template:
+    metadata:
+      name: webserver
+      labels:
+        name: webserver
+        version: v1
+    spec:
+      containers:
+        - name: nginx
+          image: my-app:v1
+          command: [nginx]
+          volumeMounts:
+            - {name: socket, mountPath: /var/run}
+        - name: php-fpm
+          image: my-app:v1
+          command: [php5-fpm]
+          volumeMounts:
+            - {name: socket, mountPath: /var/run}
+      volumes:
+        - {name: socket, emptyDir: {medium: Memory}}
